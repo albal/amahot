@@ -17,6 +17,7 @@ services:
       retries: 10
 
   backend:
+    image: ghcr.io/albal/amahot-backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -31,6 +32,7 @@ services:
     # No ports exposed — only reachable via Caddy on the internal Docker network
 
   frontend:
+    image: ghcr.io/albal/amahot-frontend:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
