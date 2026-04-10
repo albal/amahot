@@ -29,7 +29,8 @@ services:
       DATABASE_URL: postgres://amahot:${POSTGRES_PASSWORD}@postgres:5432/amahot?sslmode=disable
       PORT: "8080"
       SCRAPE_INTERVAL_MINUTES: "30"
-    # No ports exposed — only reachable via Caddy on the internal Docker network
+    ports:
+      - "8080:8080"
 
   frontend:
     image: ghcr.io/albal/amahot-frontend:latest
@@ -39,23 +40,8 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-
-  caddy:
-    image: caddy:alpine
-    restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - backend
-      - frontend
+      - "3001:80"
 
 volumes:
   pgdata:
-  caddy_data:
-  caddy_config:

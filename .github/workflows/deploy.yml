@@ -80,7 +80,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "docker-compose.yml,Caddyfile"
+          source: "docker-compose.yml"
           target: "/opt/amahot"
 
       - name: Deploy via SSH
