@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.hotukdeals.com)",
+      "WebSearch",
+      "Bash(go mod:*)",
+      "Bash(go build:*)",
+      "Bash(go version:*)",
+      "Bash(docker compose:*)",
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(curl -s http://localhost/health)",
+      "Bash(curl -s \"http://localhost/api/deals?limit=5\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-GB,en;q=0.9' -H 'Referer: https://www.google.com/' 'https://www.hotukdeals.com/deals?merchant=amazon.co.uk&temperature_filter=100&sortby=hotness')",
+      "Bash(curl -s -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-GB,en;q=0.9' -H 'Referer: https://www.google.com/' 'https://www.hotukdeals.com/deals?merchant=amazon.co.uk&temperature_filter=100&sortby=hotness')",
+      "Bash(python3)",
+      "Bash(curl -sv -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36' https://www.hotukdeals.com/share-deal/4863744)",
+      "Bash(curl -sv -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' https://www.hotukdeals.com/threads/4863744/link)",
+      "Bash(curl -s -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' 'https://www.hotukdeals.com/rest_api/v2/threads?merchant=amazon&temperature_filter=100&order=temperature&results_per_page=5')",
+      "Bash(python3 -c ':*)",
+      "Bash(curl -s -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' 'https://www.hotukdeals.com/rest_api/v2/threads?merchant=amazon&temperature_filter=100&order=temperature&results_per_page=3')",
+      "Bash(curl -s -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json, text/plain, */*' -H 'x-requested-with: XMLHttpRequest' https://www.hotukdeals.com/threads/4863744)",
+      "Bash(curl -sv -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' 'https://www.hotukdeals.com/api/v2/threads/4863744?fields=link,linkHost')"
+    ]
+  }
+}
