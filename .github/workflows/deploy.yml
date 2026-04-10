@@ -11,7 +11,7 @@ on:
 jobs:
   build-and-push:
     name: Build & Push Images
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -68,14 +68,14 @@ jobs:
   deploy:
     name: Deploy to Target Host
     needs: build-and-push
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
       - name: Copy deployment files to host
-        uses: appleboy/scp-action@v1
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -84,16 +84,22 @@ jobs:
           target: "/opt/amahot"
 
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v1.2.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: POSTGRES_PASSWORD
           script: |
             cd /opt/amahot
             
-            # Ensure Docker pulls the latest images
+            # Create/update .env file with the password secret
+            echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" > .env
+            
+            # Ensure Docker pulls the latest images from GHCR
             docker compose pull
             
-            # Restart services with new images, removing old orphaned containers
+            # Restart services with new images
             docker compose up -d --remove-orphans
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
