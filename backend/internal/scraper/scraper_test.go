@@ -176,3 +176,50 @@ func TestBuildDeal_ExternalID(t *testing.T) {
 		t.Errorf("ExternalID = %q, want %q", deal.ExternalID, "4863744")
 	}
 }
+
+func TestExtractAmazonProductURL(t *testing.T) {
+	tests := []struct {
+		name string
+		html string
+		want string
+	}{
+		{
+			name: "bare URL in description",
+			html: `Check out this deal: https://www.amazon.co.uk/dp/B09XS7JWHH great price`,
+			want: "https://www.amazon.co.uk/dp/B09XS7JWHH",
+		},
+		{
+			name: "URL with query params",
+			html: `<a href="https://www.amazon.co.uk/dp/B0TESTTEST?th=1&amp;psc=1">link</a>`,
+			want: "https://www.amazon.co.uk/dp/B0TESTTEST?th=1&amp;psc=1",
+		},
+		{
+			name: "URL with product slug prefix",
+			html: `https://www.amazon.co.uk/Sony-Headphones-WH1000XM5/dp/B09XS7JWHH?tag=old-21`,
+			want: "https://www.amazon.co.uk/Sony-Headphones-WH1000XM5/dp/B09XS7JWHH?tag=old-21",
+		},
+		{
+			name: "no Amazon URL",
+			html: `<p>Great deal on hotukdeals!</p>`,
+			want: "",
+		},
+		{
+			name: "empty string",
+			html: "",
+			want: "",
+		},
+		{
+			name: "URL inside anchor tag href",
+			html: `Buy here <a href="https://www.amazon.co.uk/dp/B001234567">Amazon</a>`,
+			want: "https://www.amazon.co.uk/dp/B001234567",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := extractAmazonProductURL(tt.html)
+			if got != tt.want {
+				t.Errorf("extractAmazonProductURL(%q) = %q, want %q", tt.html, got, tt.want)
+			}
+		})
+	}
+}

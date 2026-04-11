@@ -7,6 +7,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -14,6 +15,12 @@ import (
 
 	"github.com/albal/amahot/backend/internal/models"
 	"github.com/albal/amahot/backend/internal/repository"
+)
+
+// amazonProductURLRE matches Amazon product page URLs containing a /dp/ASIN path.
+// It is used to extract Amazon URLs from deal description HTML.
+var amazonProductURLRE = regexp.MustCompile(
+	`https?://(?:www\.)?amazon\.co\.uk/(?:[^/\s"'<>]+/)?dp/[A-Z0-9]{10}(?:[/?][^\s"'<>]*)?`,
 )
 
 // hotukdeals uses Vue3 components; deal data lives in JSON inside data-vue3 attributes.
@@ -27,15 +34,16 @@ type threadPayload struct {
 }
 
 type threadData struct {
-	ThreadID    string  `json:"threadId"`
-	TitleSlug   string  `json:"titleSlug"`
-	Title       string  `json:"title"`
-	Temperature float64 `json:"temperature"`
-	Price       float64 `json:"price"`
-	Link        string  `json:"link"`
-	LinkHost    string  `json:"linkHost"`
-	IsExpired   bool    `json:"isExpired"`
-	Merchant    struct {
+	ThreadID                string  `json:"threadId"`
+	TitleSlug               string  `json:"titleSlug"`
+	Title                   string  `json:"title"`
+	Temperature             float64 `json:"temperature"`
+	Price                   float64 `json:"price"`
+	Link                    string  `json:"link"`
+	LinkHost                string  `json:"linkHost"`
+	IsExpired               bool    `json:"isExpired"`
+	PreparedHtmlDescription string  `json:"preparedHtmlDescription"`
+	Merchant                struct {
 		MerchantName string `json:"merchantName"`
 	} `json:"merchant"`
 	MainImage struct {
@@ -162,6 +170,18 @@ func (s *Scraper) scrapePage(ctx context.Context, pageURL string) (int, error) {
 		}
 
 		deal := buildDeal(thread)
+
+		// The link field in the hotukdeals JSON is always empty in static HTML
+		// (Amazon URL is injected by JavaScript). Try to recover it from the
+		// deal's description HTML, where posters typically paste the Amazon link.
+		if !IsAmazonURL(deal.DealURL) && thread.PreparedHtmlDescription != "" {
+			if raw := extractAmazonProductURL(thread.PreparedHtmlDescription); raw != "" {
+				if rewritten, err := RewriteAmazonURL(raw); err == nil {
+					deal.DealURL = rewritten
+				}
+			}
+		}
+
 		if err := s.dealRepo.Upsert(ctx, deal); err != nil {
 			log.Printf("Scraper: upsert deal %s: %v", deal.ExternalID, err)
 			return
@@ -234,4 +254,10 @@ func buildDeal(t threadData) models.Deal {
 func isAmazonHost(host string) bool {
 	h := strings.ToLower(host)
 	return strings.Contains(h, "amazon.")
+}
+
+// extractAmazonProductURL searches html for the first Amazon product URL
+// containing a /dp/ASIN path segment. Returns empty string if none found.
+func extractAmazonProductURL(html string) string {
+	return amazonProductURLRE.FindString(html)
 }

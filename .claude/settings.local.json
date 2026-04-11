@@ -20,7 +20,8 @@
       "Bash(python3 -c ':*)",
       "Bash(curl -s -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' 'https://www.hotukdeals.com/rest_api/v2/threads?merchant=amazon&temperature_filter=100&order=temperature&results_per_page=3')",
       "Bash(curl -s -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json, text/plain, */*' -H 'x-requested-with: XMLHttpRequest' https://www.hotukdeals.com/threads/4863744)",
-      "Bash(curl -sv -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' 'https://www.hotukdeals.com/api/v2/threads/4863744?fields=link,linkHost')"
+      "Bash(curl -sv -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36' -H 'Accept: application/json' 'https://www.hotukdeals.com/api/v2/threads/4863744?fields=link,linkHost')",
+      "Bash(go test:*)"
     ]
   }
 }
